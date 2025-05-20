@@ -10,7 +10,6 @@ export default function App() {
       try {
         setResult(eval(input).toString());
       } catch (error) {
-        a;
         setResult("Error");
       }
     } else {
@@ -21,6 +20,14 @@ export default function App() {
   const clearInput = () => {
     setInput("");
     setResult("");
+  };
+
+  const handleBackspacePress = () => {
+    setInput((prevInput) => prevInput.slice(0, -1));
+  };
+
+  const isOperator = (value) => {
+    return ["/", "*", "-", "+", "="].includes(value);
   };
 
   const buttons = [
@@ -44,7 +51,7 @@ export default function App() {
             {row.map((button) => (
               <TouchableOpacity
                 key={button}
-                style={styles.button}
+                style={isOperator(button) ? styles.operatorButton : styles.button}
                 onPress={() => handleButtonPress(button)}
               >
                 <Text style={styles.buttonText}>{button}</Text>
@@ -52,9 +59,14 @@ export default function App() {
             ))}
           </View>
         ))}
-        <TouchableOpacity style={styles.clearButton} onPress={clearInput}>
-          <Text style={styles.buttonText}>C</Text>
-        </TouchableOpacity>
+        <View style={styles.utilityButtonRow}>
+          <TouchableOpacity style={styles.clearButton} onPress={clearInput}>
+            <Text style={styles.buttonText}>C</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.delButton} onPress={handleBackspacePress}>
+            <Text style={styles.buttonText}>DEL</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -70,17 +82,24 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   resultText: {
-    fontSize: 30,
+    fontSize: 48, // Current: 30
+    color: "#2c3e50",
   },
   inputContainer: {
     alignItems: "flex-end",
     margin: 10,
   },
   inputText: {
-    fontSize: 24,
+    fontSize: 36,
+    color: "#7f8c8d",
   },
   buttonContainer: {
     flexDirection: "column",
+  },
+  utilityButtonRow: {
+    flexDirection: "row",
+    justifyContent: "center", // Center the buttons in the row
+    marginBottom: 10,
   },
   buttonRow: {
     flexDirection: "row",
@@ -95,6 +114,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
   },
+  operatorButton: {
+    width: 60,
+    height: 60,
+    backgroundColor: "#f39c12", // orange
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+  },
   clearButton: {
     width: 60,
     height: 60,
@@ -102,7 +129,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
-    marginTop: 10,
+    marginHorizontal: 10, // Add horizontal margin
+  },
+  delButton: {
+    width: 60,
+    height: 60,
+    backgroundColor: "#e74c3c", // Same red as Clear
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    marginHorizontal: 10, // Add horizontal margin
   },
   buttonText: {
     color: "white",
